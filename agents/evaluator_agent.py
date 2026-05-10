@@ -9,7 +9,7 @@ def evaluator_agent(state: AgentState) -> AgentState:
     """
 
     financial_analysis = state["financial_analysis"]
-    compliance_analysis = state["compliance_analysis"]
+    conformite_analysis = state["conformite_analysis"]
 
     if "retards mineurs" in financial_analysis.lower():
         risk_level = "moyen"
@@ -23,7 +23,7 @@ def evaluator_agent(state: AgentState) -> AgentState:
     {financial_analysis}
 
     Analyse conformité :
-    {compliance_analysis}
+    {conformite_analysis}
 
     Niveau de risque estimé : {risk_level.upper()}
 

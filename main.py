@@ -2,10 +2,10 @@ from graph.workflow import app
 
 
 initial_state = {
-    "question": "Analyse financière du client C102",
+    "question": "Analyse financière du client C015",
     "route": "",
     "financial_analysis": "",
-    "compliance_analysis": "",
+    "conformite_analysis": "",
     "risk_level": "",
     "final_answer": "",
     "documents": []
@@ -14,4 +14,8 @@ initial_state = {
 
 result = app.invoke(initial_state)
 
-print(result["final_answer"])
+print("\n================ RESULTAT FINAL ================\n")
+
+print(result["financial_analysis"])
+
+print("\n================================================\n")

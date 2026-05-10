@@ -1,0 +1,101 @@
+client_id,prenom,nom,age,situation,nombre_enfants,activite,revenu_mensuel_mad,encours_mad,retard_jours,incidents_paiement,echeance_janvier,echeance_fevrier,echeance_mars,niveau_risque
+C001,Abdelilah,Lahlou,73,Marié,4,Commerçant,16265,28506,45,3,Payée,Payée,Payée,Élevé
+C002,Rachid,El Amrani,43,Marié,4,Commerçant,27682,113109,30,1,Payée,Payée,Non payée,Moyen
+C003,Hicham,El Fassi,63,Marié,2,Retraité,26360,88891,0,1,Non payée,Payée,Non payée,Faible
+C004,Zakaria,Kadiri,40,Marié,0,Médecin,32915,95995,5,1,Non payée,Payée,Non payée,Faible
+C005,Nadia,Bennani,74,Marié,5,Médecin,19632,12833,45,3,Payée,Non payée,Non payée,Élevé
+C006,Nadia,El Amrani,47,Célibataire,5,Fonctionnaire,14863,40782,0,0,Non payée,Non payée,Non payée,Faible
+C007,Amina,Tazi,63,Marié,3,Professeur,34099,40710,0,2,Payée,Payée,Non payée,Élevé
+C008,Salma,El Idrissi,62,Marié,5,Retraité,28026,37754,60,2,Non payée,Payée,Non payée,Élevé
+C009,Amina,Bennani,31,Célibataire,0,Retraité,18839,12957,5,3,Payée,Non payée,Non payée,Élevé
+C010,Salma,Chraibi,48,Marié,4,Retraité,22060,74259,60,1,Non payée,Payée,Payée,Élevé
+C011,Mohamed,Lahlou,68,Célibataire,2,Commerçant,26940,21131,15,0,Non payée,Non payée,Non payée,Moyen
+C012,Souad,Tazi,67,Marié,5,Retraité,6038,57940,0,2,Payée,Non payée,Payée,Élevé
+C013,Zakaria,Lahlou,39,Célibataire,3,Entrepreneur,5150,10794,10,3,Payée,Non payée,Payée,Élevé
+C014,Karim,El Idrissi,75,Célibataire,1,Retraité,18827,54635,5,3,Non payée,Payée,Payée,Élevé
+C015,Khadija,Benjelloun,57,Célibataire,5,Technicien,6068,67464,0,3,Non payée,Non payée,Payée,Élevé
+C016,Rachid,Ouazzani,59,Marié,3,Commerçant,16373,104832,30,0,Payée,Non payée,Payée,Moyen
+C017,Mohamed,Tahiri,54,Célibataire,1,Entrepreneur,17539,53928,15,3,Non payée,Payée,Non payée,Élevé
+C018,Rachid,El Amrani,46,Marié,3,Retraité,4467,24015,0,3,Non payée,Non payée,Payée,Élevé
+C019,Nadia,Chraibi,41,Célibataire,1,Entrepreneur,30060,55906,10,1,Payée,Non payée,Payée,Faible
+C020,Souad,Benjelloun,38,Célibataire,2,Fonctionnaire,8833,108482,45,1,Payée,Non payée,Non payée,Élevé
+C021,Imane,Tazi,54,Marié,5,Fonctionnaire,34110,82821,5,2,Payée,Payée,Non payée,Élevé
+C022,Omar,Ouazzani,36,Marié,2,Retraité,8427,23274,0,1,Non payée,Non payée,Non payée,Faible
+C023,Abdelilah,Berrada,51,Marié,1,Ingénieur,5323,58244,45,3,Non payée,Payée,Payée,Élevé
+C024,Imane,Alaoui,63,Marié,3,Commerçant,17585,80064,0,3,Non payée,Non payée,Payée,Élevé
+C025,Souad,Lahlou,55,Célibataire,1,Commerçant,11202,70807,30,1,Non payée,Non payée,Non payée,Moyen
+C026,Imane,Ouazzani,50,Marié,2,Technicien,7222,59435,60,2,Non payée,Payée,Non payée,Élevé
+C027,Nadia,Tazi,41,Marié,2,Entrepreneur,33767,108713,15,2,Non payée,Payée,Non payée,Élevé
+C028,Fatima,Tahiri,47,Célibataire,5,Fonctionnaire,12540,19657,10,0,Payée,Payée,Non payée,Faible
+C029,Souad,Mekouar,61,Marié,1,Fonctionnaire,19180,119414,45,3,Non payée,Payée,Payée,Élevé
+C030,Abdelilah,Alaoui,71,Marié,3,Technicien,32166,88898,10,0,Payée,Payée,Payée,Faible
+C031,Mounir,Mekouar,35,Célibataire,3,Commerçant,5039,31325,5,0,Non payée,Non payée,Payée,Faible
+C032,Rachid,Lahlou,61,Marié,3,Professeur,12865,83486,15,2,Payée,Non payée,Non payée,Élevé
+C033,Ahmed,Mekouar,31,Célibataire,2,Technicien,17149,15724,10,2,Payée,Payée,Payée,Élevé
+C034,Rachid,Skalli,60,Célibataire,3,Ingénieur,19027,35595,15,2,Non payée,Non payée,Non payée,Élevé
+C035,Abdelilah,Ouazzani,61,Célibataire,2,Fonctionnaire,25842,42229,0,1,Payée,Payée,Non payée,Faible
+C036,Karim,Mekouar,51,Marié,3,Entrepreneur,23131,67865,0,3,Non payée,Non payée,Payée,Élevé
+C037,Souad,Lahlou,43,Marié,3,Retraité,23223,54659,0,3,Non payée,Payée,Payée,Élevé
+C038,Naima,Lahlou,66,Célibataire,3,Technicien,10707,101433,10,0,Payée,Payée,Non payée,Faible
+C039,Omar,Chraibi,49,Marié,5,Retraité,14736,12518,5,0,Payée,Non payée,Non payée,Faible
+C040,Hicham,Chraibi,32,Marié,5,Professeur,12377,10376,5,3,Payée,Payée,Non payée,Élevé
+C041,Zakaria,Lahlou,40,Célibataire,4,Retraité,21492,113426,0,3,Non payée,Non payée,Non payée,Élevé
+C042,Imane,Bennani,51,Célibataire,0,Entrepreneur,23233,11883,45,2,Non payée,Payée,Payée,Élevé
+C043,Karim,El Amrani,59,Marié,1,Commerçant,21717,21831,60,2,Non payée,Non payée,Non payée,Élevé
+C044,Hicham,Ouazzani,67,Célibataire,3,Fonctionnaire,6323,102328,60,2,Payée,Payée,Non payée,Élevé
+C045,Salma,Ouazzani,58,Célibataire,0,Commerçant,4348,6905,45,3,Non payée,Payée,Non payée,Élevé
+C046,Souad,Lahlou,34,Marié,5,Ingénieur,11130,102347,15,2,Payée,Payée,Non payée,Élevé
+C047,Samira,El Idrissi,57,Célibataire,1,Médecin,14332,64820,60,3,Payée,Payée,Non payée,Élevé
+C048,Samira,El Idrissi,51,Célibataire,1,Médecin,10198,102797,30,1,Payée,Payée,Payée,Moyen
+C049,Naima,Skalli,68,Marié,3,Médecin,10190,49973,45,1,Non payée,Payée,Payée,Élevé
+C050,Salma,Chraibi,65,Célibataire,2,Technicien,7335,94328,30,1,Non payée,Non payée,Payée,Moyen
+C051,Abdelilah,Bennani,57,Célibataire,1,Professeur,28809,8094,60,1,Non payée,Payée,Non payée,Élevé
+C052,Zakaria,El Amrani,64,Célibataire,4,Retraité,9932,85290,30,3,Non payée,Payée,Non payée,Élevé
+C053,Hicham,Lahlou,43,Marié,1,Professeur,18406,10707,10,0,Non payée,Non payée,Payée,Faible
+C054,Amina,Lahlou,31,Célibataire,3,Médecin,25300,84060,0,2,Non payée,Payée,Payée,Élevé
+C055,Zakaria,Chraibi,43,Célibataire,4,Ingénieur,34565,50992,0,0,Non payée,Payée,Non payée,Faible
+C056,Karim,Tazi,51,Marié,2,Commerçant,4965,47186,0,2,Payée,Non payée,Non payée,Élevé
+C057,Omar,Chraibi,57,Célibataire,2,Commerçant,5643,65736,5,2,Non payée,Non payée,Payée,Élevé
+C058,Hicham,Mekouar,65,Marié,0,Ingénieur,8166,112292,0,0,Payée,Non payée,Payée,Faible
+C059,Khadija,Kadiri,55,Célibataire,2,Technicien,27443,51646,10,2,Payée,Non payée,Non payée,Élevé
+C060,Hicham,El Amrani,63,Célibataire,2,Technicien,14360,27872,15,0,Payée,Non payée,Payée,Moyen
+C061,Mohamed,Berrada,68,Célibataire,5,Technicien,13084,72434,0,0,Payée,Non payée,Non payée,Faible
+C062,Nadia,Tazi,49,Marié,5,Fonctionnaire,9225,55399,15,3,Payée,Non payée,Non payée,Élevé
+C063,Ahmed,El Idrissi,62,Célibataire,2,Retraité,15508,75596,0,2,Non payée,Payée,Payée,Élevé
+C064,Zakaria,Tazi,44,Marié,1,Professeur,7005,22891,5,3,Non payée,Payée,Payée,Élevé
+C065,Youssef,Kadiri,31,Célibataire,5,Entrepreneur,11188,30596,45,2,Payée,Payée,Non payée,Élevé
+C066,Ahmed,Lahlou,54,Marié,0,Technicien,21165,50808,0,2,Payée,Non payée,Payée,Élevé
+C067,Youssef,Skalli,35,Célibataire,3,Technicien,18143,28837,30,3,Non payée,Payée,Non payée,Élevé
+C068,Imane,Tazi,58,Marié,2,Médecin,15576,68449,60,3,Payée,Non payée,Payée,Élevé
+C069,Imane,Ouazzani,61,Célibataire,5,Médecin,12676,117519,30,3,Payée,Payée,Non payée,Élevé
+C070,Hassan,El Amrani,30,Célibataire,5,Commerçant,17901,94241,5,3,Non payée,Payée,Non payée,Élevé
+C071,Hicham,Chraibi,68,Marié,1,Entrepreneur,22627,21838,5,0,Payée,Non payée,Payée,Faible
+C072,Khadija,Lahlou,49,Célibataire,2,Technicien,25478,12308,5,2,Non payée,Non payée,Non payée,Élevé
+C073,Abdelilah,Ouazzani,34,Marié,0,Fonctionnaire,32695,112211,5,0,Payée,Payée,Payée,Faible
+C074,Amina,Tahiri,51,Marié,5,Médecin,27829,44299,5,2,Non payée,Non payée,Payée,Élevé
+C075,Youssef,Ouazzani,71,Marié,0,Retraité,18953,19852,30,0,Payée,Payée,Payée,Moyen
+C076,Samira,Skalli,34,Marié,4,Professeur,15383,81356,10,2,Payée,Non payée,Non payée,Élevé
+C077,Souad,Skalli,58,Marié,5,Professeur,18715,18648,15,0,Payée,Payée,Payée,Moyen
+C078,Youssef,Tazi,49,Marié,0,Professeur,14415,32758,5,0,Non payée,Payée,Payée,Faible
+C079,Samira,Tazi,61,Marié,3,Technicien,7065,25334,0,3,Payée,Non payée,Non payée,Élevé
+C080,Mounir,Kadiri,65,Célibataire,4,Ingénieur,4970,84473,10,1,Payée,Non payée,Payée,Faible
+C081,Omar,Berrada,39,Célibataire,5,Retraité,11163,19749,5,3,Non payée,Payée,Payée,Élevé
+C082,Naima,El Amrani,71,Marié,0,Ingénieur,7421,18811,60,3,Payée,Payée,Payée,Élevé
+C083,Naima,El Amrani,38,Marié,0,Entrepreneur,22549,21218,0,1,Non payée,Non payée,Payée,Faible
+C084,Imane,El Idrissi,44,Célibataire,2,Entrepreneur,32494,38236,60,0,Payée,Payée,Non payée,Élevé
+C085,Nadia,Chraibi,66,Célibataire,1,Fonctionnaire,33987,41034,30,3,Payée,Payée,Payée,Élevé
+C086,Mounir,Benjelloun,52,Célibataire,1,Ingénieur,6601,60176,5,1,Payée,Payée,Non payée,Faible
+C087,Zakaria,El Idrissi,32,Marié,5,Entrepreneur,16200,17806,15,0,Non payée,Payée,Payée,Moyen
+C088,Youssef,El Amrani,53,Célibataire,3,Entrepreneur,20892,83570,10,0,Payée,Non payée,Non payée,Faible
+C089,Hassan,El Idrissi,64,Marié,5,Médecin,28888,105663,60,1,Non payée,Non payée,Non payée,Élevé
+C090,Hicham,Benjelloun,33,Célibataire,3,Médecin,30291,108108,15,0,Payée,Payée,Non payée,Moyen
+C091,Karim,El Idrissi,38,Célibataire,5,Commerçant,29319,117182,0,3,Payée,Non payée,Non payée,Élevé
+C092,Zakaria,Tahiri,30,Marié,4,Fonctionnaire,27637,100853,45,1,Payée,Payée,Payée,Élevé
+C093,Hassan,Mekouar,61,Marié,1,Médecin,12384,110000,30,2,Payée,Non payée,Non payée,Élevé
+C094,Omar,Tahiri,61,Marié,0,Professeur,18293,75334,5,0,Non payée,Non payée,Non payée,Faible
+C095,Hicham,El Idrissi,36,Célibataire,1,Fonctionnaire,5250,102643,15,2,Payée,Payée,Non payée,Élevé
+C096,Samira,Tazi,75,Célibataire,5,Ingénieur,27169,96190,45,2,Payée,Payée,Non payée,Élevé
+C097,Omar,El Amrani,46,Célibataire,5,Fonctionnaire,28556,53083,5,3,Payée,Payée,Payée,Élevé
+C098,Samira,Berrada,45,Célibataire,1,Entrepreneur,22700,73998,45,1,Non payée,Non payée,Payée,Élevé
+C099,Ahmed,Chraibi,52,Célibataire,0,Ingénieur,27347,90288,30,1,Payée,Payée,Payée,Moyen
+C100,Fatima,Lahlou,49,Marié,1,Retraité,5329,40401,60,3,Payée,Non payée,Non payée,Élevé

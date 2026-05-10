@@ -8,7 +8,7 @@ def supervisor_agent(state: AgentState) -> AgentState:
         route = "finance"
 
     elif "conformité" in question or "réglementation" in question or "reglementation" in question:
-        route = "compliance"
+        route = "conformite"
 
     else:
         route = "both"

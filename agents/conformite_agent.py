@@ -1,7 +1,7 @@
 from graph.state import AgentState
 
 
-def compliance_agent(state: AgentState) -> AgentState:
+def conformite_agent(state: AgentState) -> AgentState:
     """
     Agent conformité :
     vérifie les règles réglementaires et internes.
@@ -21,6 +21,6 @@ def compliance_agent(state: AgentState) -> AgentState:
 
     print("[COMPLIANCE AGENT] Analyse de conformité effectuée")
 
-    state["compliance_analysis"] = analysis
+    state["conformite_analysis"] = analysis
 
     return state
