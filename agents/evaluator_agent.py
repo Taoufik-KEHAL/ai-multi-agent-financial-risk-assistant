@@ -1,13 +1,10 @@
 from graph.state import AgentState
 
-from langchain_ollama import ChatOllama
+from config.llm import get_llm
 
 
 # Initialisation du modèle
-model = ChatOllama(
-    model="llama3.2:3b",
-    temperature=0
-)
+model = get_llm()
 
 
 def evaluator_agent(state: AgentState) -> AgentState:

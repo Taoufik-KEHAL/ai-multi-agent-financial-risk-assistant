@@ -9,3 +9,5 @@ class AgentState(TypedDict):
     risk_level: str
     final_answer: str
     documents: List[str]
+    human_validation: str
+    is_validated: bool

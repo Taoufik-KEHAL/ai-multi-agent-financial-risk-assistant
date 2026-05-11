@@ -8,7 +8,9 @@ initial_state = {
     "conformite_analysis": "",
     "risk_level": "",
     "final_answer": "",
-    "documents": []
+    "documents": [],
+    "human_validation": "",
+    "is_validated": False
 }
 
 

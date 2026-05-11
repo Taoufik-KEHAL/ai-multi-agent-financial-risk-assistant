@@ -3,14 +3,11 @@ from graph.state import AgentState
 from tools.conformite_retriever import search_conformite
 from tools.procedure_retriever import search_procedures
 
-from langchain_ollama import ChatOllama
+from config.llm import get_llm
 
 
 # Initialisation du modèle
-model = ChatOllama(
-    model="llama3.2:3b",
-    temperature=0
-)
+model = get_llm()
 
 
 def conformite_agent(state: AgentState) -> AgentState:
