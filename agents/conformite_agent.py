@@ -1,25 +1,61 @@
 from graph.state import AgentState
 
+from tools.conformite_retriever import search_conformite
+from tools.procedure_retriever import search_procedures
+
+from langchain_ollama import ChatOllama
+
+
+# Initialisation du modèle
+model = ChatOllama(
+    model="llama3.2:3b",
+    temperature=0
+)
+
 
 def conformite_agent(state: AgentState) -> AgentState:
     """
     Agent conformité :
-    vérifie les règles réglementaires et internes.
+    utilise le RAG documentaire
+    pour analyser le dossier client.
     """
 
     question = state["question"]
 
-    analysis = f"""
-    Analyse de conformité générée pour la demande :
+    # Recherche documentaire
+    conformite_context = search_conformite(question)
+
+    procedure_context = search_procedures(question)
+
+    # Prompt
+    prompt = f"""
+    Tu es un expert conformité et recouvrement.
+
+    Analyse la situation du client
+    à partir des documents suivants.
+
+    === RÈGLES DE CONFORMITÉ ===
+    {conformite_context}
+
+    === PROCÉDURES DE RECOUVREMENT ===
+    {procedure_context}
+
+    Question utilisateur :
     {question}
 
-    Résultat :
-    - Aucune restriction réglementaire critique détectée
-    - Le dossier nécessite une vérification humaine avant décision finale
-    - Les règles internes de validation doivent être respectées
+    Fournis :
+    - une analyse conformité
+    - les risques détectés
+    - les procédures applicables
+    - une recommandation finale
     """
 
-    print("[COMPLIANCE AGENT] Analyse de conformité effectuée")
+    # Appel LLM
+    response = model.invoke(prompt)
+
+    analysis = response.content
+
+    print("[CONFORMITE AGENT] Analyse conformité générée")
 
     state["conformite_analysis"] = analysis
 

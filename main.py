@@ -2,7 +2,7 @@ from graph.workflow import app
 
 
 initial_state = {
-    "question": "Analyse financière du client C015",
+    "question": "Le client C015 peut-il obtenir une validation malgré plusieurs retards de paiement ?",
     "route": "",
     "financial_analysis": "",
     "conformite_analysis": "",
@@ -16,6 +16,6 @@ result = app.invoke(initial_state)
 
 print("\n================ RESULTAT FINAL ================\n")
 
-print(result["financial_analysis"])
+print(result["final_answer"])
 
 print("\n================================================\n")
