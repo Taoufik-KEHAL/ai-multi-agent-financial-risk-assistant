@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from datetime import datetime
 
 import pandas as pd
 import streamlit as st
@@ -56,6 +57,50 @@ def client_id_from_label(label: str) -> str:
     return label.split(" - ", maxsplit=1)[0]
 
 
+def add_history_entry(client: pd.Series, result: dict) -> None:
+    history = st.session_state.setdefault("analysis_history", [])
+
+    history.append(
+        {
+            "client_id": client["client_id"],
+            "client": f"{client['prenom']} {client['nom']}",
+            "risque": result.get("risk_level") or client["niveau_risque"],
+            "validation": status_label(result),
+            "date": datetime.now().strftime("%d/%m/%Y %H:%M"),
+        }
+    )
+
+
+def update_latest_history_status(result: dict) -> None:
+    history = st.session_state.get("analysis_history", [])
+
+    if history:
+        history[-1]["validation"] = status_label(result)
+        history[-1]["risque"] = result.get("risk_level") or history[-1]["risque"]
+
+
+def get_client_history(client_id: str) -> list[dict]:
+    history = st.session_state.get("analysis_history", [])
+    return [entry for entry in history if entry["client_id"] == client_id]
+
+
+def display_selected_client_history(client_id: str) -> str:
+    client_history = get_client_history(client_id)
+
+    if not client_history:
+        return "new"
+
+    latest_entry = client_history[-1]
+
+    st.info(
+        f"Dossier déjà traité le {latest_entry['date']} - "
+        f"Risque : {latest_entry['risque']}\n\n"
+        f"Validation : {latest_entry['validation']}."
+    )
+
+    return "history"
+
+
 def main() -> None:
     st.set_page_config(
         page_title="Assistant risque financier",
@@ -95,16 +140,22 @@ def main() -> None:
         "historique de paiement ?"
     )
 
-    run_analysis = st.button(
-        "Lancer l'analyse du dossier sélectionné",
-        type="primary",
-    )
+    analysis_action = display_selected_client_history(client_id)
+
+    if analysis_action == "new":
+        run_analysis = st.button(
+            "Lancer l'analyse du dossier sélectionné",
+            type="primary",
+        )
+    else:
+        run_analysis = analysis_action == "rerun"
 
     if run_analysis:
-        with st.spinner("Analyse multi-agent en cours..."):
+        with st.spinner("Analyse en cours..."):
             st.session_state["analysis_result"] = app.invoke(
                 build_initial_state(default_question)
             )
+            add_history_entry(selected_client, st.session_state["analysis_result"])
 
     result = st.session_state.get("analysis_result")
 
@@ -140,6 +191,7 @@ def main() -> None:
             }
 
             st.session_state["analysis_result"] = human_validation_agent(updated_state)
+            update_latest_history_status(st.session_state["analysis_result"])
             st.rerun()
 
     with left:
