@@ -1,47 +1,18 @@
-from langchain_community.document_loaders import PyPDFLoader
-
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-from langchain_community.embeddings import HuggingFaceEmbeddings
-
-from langchain_core.vectorstores import InMemoryVectorStore
+from tools.rag_vectorstore import search_pdf_context
 
 
-# Chargement du PDF
-loader = PyPDFLoader(
-    "data/conformite/regles_conformite.pdf"
-)
-
-documents = loader.load()
-
-
-# Chunking
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=300,
-    chunk_overlap=50,
-    add_start_index=True
-)
-
-all_splits = text_splitter.split_documents(documents)
-
-
-# Embeddings
-embeddings = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
-)
-
-
-# Vector store
-vector_store = InMemoryVectorStore(embeddings)
-
-
-# Indexation
-vector_store.add_documents(documents=all_splits)
+CONFORMITE_PDF_PATH = "data/conformite/regles_conformite.pdf"
+CONFORMITE_VECTORSTORE_PATH = "vectorstores/conformite/store.json"
 
 
 def search_conformite(query: str) -> str:
-    results = vector_store.similarity_search(query, k=2)
+    """
+    Recherche sémantique dans les règles de conformité.
+    """
 
-    return "\n\n".join(
-        [doc.page_content for doc in results]
+    return search_pdf_context(
+        pdf_path=CONFORMITE_PDF_PATH,
+        store_path=CONFORMITE_VECTORSTORE_PATH,
+        query=query,
+        k=2,
     )

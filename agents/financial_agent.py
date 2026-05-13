@@ -1,5 +1,13 @@
+import re
+
 from graph.state import AgentState
+from config.llm import get_llm
 from tools.client_data_tool import get_client_data
+from tools.prompt_loader import load_prompt
+
+
+model = get_llm()
+FINANCIAL_PROMPT = load_prompt("financial.txt")
 
 
 def financial_agent(state: AgentState) -> AgentState:
@@ -11,14 +19,8 @@ def financial_agent(state: AgentState) -> AgentState:
 
     question = state["question"]
 
-    # Extraction simple de l'identifiant client
-    words = question.split()
-
-    client_id = None
-
-    for word in words:
-        if word.startswith("C"):
-            client_id = word.upper()
+    client_match = re.search(r"\bC\d{3}\b", question.upper())
+    client_id = client_match.group(0) if client_match else None
 
     if not client_id:
         state["financial_analysis"] = "Identifiant client introuvable."
@@ -33,29 +35,27 @@ def financial_agent(state: AgentState) -> AgentState:
 
     client = result["client_data"]
 
-    analysis = f"""
-    Analyse financière du client {client['client_id']} :
+    prompt = FINANCIAL_PROMPT.format(
+        question=question,
+        client_id=client["client_id"],
+        prenom=client["prenom"],
+        nom=client["nom"],
+        age=client["age"],
+        situation=client["situation"],
+        nombre_enfants=client["nombre_enfants"],
+        activite=client["activite"],
+        revenu_mensuel_mad=client["revenu_mensuel_mad"],
+        encours_mad=client["encours_mad"],
+        retard_jours=client["retard_jours"],
+        incidents_paiement=client["incidents_paiement"],
+        echeance_janvier=client["echeance_janvier"],
+        echeance_fevrier=client["echeance_fevrier"],
+        echeance_mars=client["echeance_mars"],
+        niveau_risque=client["niveau_risque"],
+    )
 
-    Informations personnelles :
-    - Nom : {client['prenom']} {client['nom']}
-    - Activité : {client['activite']}
-    - Situation familiale : {client['situation']}
-    - Nombre d'enfants : {client['nombre_enfants']}
-
-    Situation financière :
-    - Revenu mensuel : {client['revenu_mensuel_mad']} MAD
-    - Encours : {client['encours_mad']} MAD
-    - Retard : {client['retard_jours']} jours
-    - Incidents de paiement : {client['incidents_paiement']}
-
-    Échéances :
-    - Janvier : {client['echeance_janvier']}
-    - Février : {client['echeance_fevrier']}
-    - Mars : {client['echeance_mars']}
-
-    Niveau de risque estimé :
-    - {client['niveau_risque']}
-    """
+    response = model.invoke(prompt)
+    analysis = response.content
 
     print(f"[FINANCIAL AGENT] Analyse du client {client_id} effectuée")
 

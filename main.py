@@ -10,7 +10,9 @@ initial_state = {
     "final_answer": "",
     "documents": [],
     "human_validation": "",
-    "is_validated": False
+    "is_validated": False,
+    "human_comment": "",
+    "allow_console_validation": True,
 }
 
 
