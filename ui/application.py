@@ -114,7 +114,6 @@ def main() -> None:
     left, right = st.columns([2, 1])
 
     with right:
-        st.subheader("Statut")
         st.metric("Validation", status_label(result))
 
         if result.get("risk_level"):

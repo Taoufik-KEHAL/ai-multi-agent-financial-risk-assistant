@@ -2,6 +2,8 @@
 .env
 __pycache__/
 *.pyc
+tests/
+docs/
 .vscode/
 .idea/
 .DS_Store
