@@ -9,13 +9,13 @@ Question utilisateur :
 {question}
 
 Analyse financière :
-{financial_analysis}
+{analyse_financiere}
 
 Extraits RAG - règles de conformité :
-{conformite_context}
+{contexte_conformite}
 
 Extraits RAG - procédures de recouvrement :
-{procedure_context}
+{contexte_procedure}
 
 Règles de rédaction :
 - Ne cite que les règles et procédures présentes dans les extraits.

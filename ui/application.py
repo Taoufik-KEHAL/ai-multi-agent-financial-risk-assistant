@@ -6,96 +6,122 @@ import pandas as pd
 import streamlit as st
 
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
+DOSSIER_RACINE = Path(__file__).resolve().parents[1]
+if str(DOSSIER_RACINE) not in sys.path:
+    sys.path.insert(0, str(DOSSIER_RACINE))
 
-from agents.human_validation_agent import human_validation_agent
-from graph.workflow import app
+from agents.human_validation_agent import nettoyer_decision_finale, agent_validation_humaine
+from graph.workflow import application
 
 
-CLIENTS_PATH = ROOT_DIR / "data" / "clients" / "clients_historique.csv"
+CHEMIN_CLIENTS = DOSSIER_RACINE / "data" / "clients" / "clients_historique.csv"
 
 
 @st.cache_data
-def load_clients() -> pd.DataFrame:
-    return pd.read_csv(CLIENTS_PATH)
+def charger_clients() -> pd.DataFrame:
+    return pd.read_csv(CHEMIN_CLIENTS)
 
 
-def build_initial_state(question: str) -> dict:
+def construire_etat_initial(question: str) -> dict:
     return {
         "question": question,
         "route": "",
-        "financial_analysis": "",
-        "conformite_analysis": "",
-        "risk_level": "",
-        "final_answer": "",
+        "analyse_financiere": "",
+        "analyse_conformite": "",
+        "niveau_risque": "",
+        "reponse_finale": "",
         "documents": [],
-        "human_validation": "",
-        "is_validated": False,
-        "human_comment": "",
-        "allow_console_validation": False,
+        "validation_humaine": "",
+        "est_valide": False,
+        "commentaire_humain": "",
+        "autoriser_validation_console": False,
     }
 
 
-def status_label(result: dict) -> str:
-    if result.get("is_validated"):
+def libelle_statut(resultat: dict) -> str:
+    if resultat.get("est_valide"):
         return "Validée"
 
-    message = result.get("human_validation", "")
-    if "refusée" in message.lower():
+    message = resultat.get("validation_humaine", "")
+    if "refus" in message.lower():
         return "Refusée"
 
     return "En attente"
 
 
-def client_label(row: pd.Series) -> str:
-    return f"{row['client_id']} - {row['prenom']} {row['nom']}"
+def reponse_finale_pour_affichage(resultat: dict) -> str:
+    reponse = nettoyer_decision_finale(
+        resultat.get("brouillon_decision") or resultat.get("reponse_finale", "")
+    )
+    statut = libelle_statut(resultat)
+
+    if statut == "Validée":
+        resume_decision = "Décision finale : le dossier a été validé."
+    elif statut == "Refusée":
+        resume_decision = "Décision finale : le dossier a été refusé."
+    else:
+        resume_decision = "Décision finale : EN ATTENTE de validation humaine."
+
+    reponse_finale = f"{reponse}\n\n{resume_decision}"
+    commentaire = resultat.get("commentaire_humain", "").strip()
+
+    if commentaire:
+        reponse_finale += f"\nCommentaires : {commentaire}"
+
+    return reponse_finale
 
 
-def client_id_from_label(label: str) -> str:
-    return label.split(" - ", maxsplit=1)[0]
+def libelle_client(ligne: pd.Series) -> str:
+    return f"{ligne['client_id']} - {ligne['prenom']} {ligne['nom']}"
 
 
-def add_history_entry(client: pd.Series, result: dict) -> None:
-    history = st.session_state.setdefault("analysis_history", [])
+def identifiant_client_depuis_libelle(libelle: str) -> str:
+    return libelle.split(" - ", maxsplit=1)[0]
 
-    history.append(
+
+def ajouter_entree_historique(client: pd.Series, resultat: dict) -> None:
+    historique = st.session_state.setdefault("historique_analyses", [])
+
+    historique.append(
         {
             "client_id": client["client_id"],
             "client": f"{client['prenom']} {client['nom']}",
-            "risque": result.get("risk_level") or client["niveau_risque"],
-            "validation": status_label(result),
+            "risque": resultat.get("niveau_risque") or client["niveau_risque"],
+            "validation": libelle_statut(resultat),
             "date": datetime.now().strftime("%d/%m/%Y %H:%M"),
         }
     )
 
 
-def update_latest_history_status(result: dict) -> None:
-    history = st.session_state.get("analysis_history", [])
+def mettre_a_jour_dernier_statut_historique(resultat: dict) -> None:
+    historique = st.session_state.get("historique_analyses", [])
 
-    if history:
-        history[-1]["validation"] = status_label(result)
-        history[-1]["risque"] = result.get("risk_level") or history[-1]["risque"]
-
-
-def get_client_history(client_id: str) -> list[dict]:
-    history = st.session_state.get("analysis_history", [])
-    return [entry for entry in history if entry["client_id"] == client_id]
+    if historique:
+        historique[-1]["validation"] = libelle_statut(resultat)
+        historique[-1]["risque"] = (
+            resultat.get("niveau_risque") or historique[-1]["risque"]
+        )
 
 
-def display_selected_client_history(client_id: str) -> str:
-    client_history = get_client_history(client_id)
+def recuperer_historique_client(identifiant_client: str) -> list[dict]:
+    historique = st.session_state.get("historique_analyses", [])
+    return [
+        entree for entree in historique if entree["client_id"] == identifiant_client
+    ]
 
-    if not client_history:
+
+def afficher_historique_client_selectionne(identifiant_client: str) -> str:
+    historique_client = recuperer_historique_client(identifiant_client)
+
+    if not historique_client:
         return "new"
 
-    latest_entry = client_history[-1]
+    derniere_entree = historique_client[-1]
 
     st.info(
-        f"Dossier déjà traité le {latest_entry['date']} - "
-        f"Risque : {latest_entry['risque']}\n\n"
-        f"Validation : {latest_entry['validation']}."
+        f"Dossier déjà traité le {derniere_entree['date']} - "
+        f"Risque : {derniere_entree['risque']}\n\n"
+        f"Validation : {derniere_entree['validation']}."
     )
 
     return "history"
@@ -107,7 +133,7 @@ def main() -> None:
         layout="wide",
     )
 
-    clients = load_clients()
+    clients = charger_clients()
 
     st.title("Assistant analyse risque financier")
     st.write("")
@@ -115,60 +141,64 @@ def main() -> None:
     with st.sidebar:
         st.header("Veuillez choisir le dossier client à analyser :")
 
-        client_labels = [client_label(row) for _, row in clients.iterrows()]
-        default_index = (
+        libelles_clients = [libelle_client(ligne) for _, ligne in clients.iterrows()]
+        indice_defaut = (
             clients.index[clients["client_id"] == "C015"].tolist()[0]
             if "C015" in clients["client_id"].values
             else 0
         )
 
-        selected_label = st.selectbox(
+        libelle_selectionne = st.selectbox(
             "Client",
-            client_labels,
-            index=default_index,
+            libelles_clients,
+            index=indice_defaut,
         )
 
-        client_id = client_id_from_label(selected_label)
-        selected_client = clients[clients["client_id"] == client_id].iloc[0]
+        identifiant_client = identifiant_client_depuis_libelle(libelle_selectionne)
+        client_selectionne = clients[
+            clients["client_id"] == identifiant_client
+        ].iloc[0]
 
-        st.metric("Risque financier", selected_client["niveau_risque"])
-        st.metric("Retard actuel", f"{selected_client['retard_jours']} jours")
-        st.metric("Incidents", int(selected_client["incidents_paiement"]))
+        st.metric("Risque financier", client_selectionne["niveau_risque"])
+        st.metric("Retard actuel", f"{client_selectionne['retard_jours']} jours")
+        st.metric("Incidents", int(client_selectionne["incidents_paiement"]))
 
-    default_question = (
-        f"Le client {client_id} peut-il obtenir une validation malgré son "
+    question_defaut = (
+        f"Le client {identifiant_client} peut-il obtenir une validation malgré son "
         "historique de paiement ?"
     )
 
-    analysis_action = display_selected_client_history(client_id)
+    action_analyse = afficher_historique_client_selectionne(identifiant_client)
 
-    if analysis_action == "new":
-        run_analysis = st.button(
+    if action_analyse == "new":
+        lancer_analyse = st.button(
             "Lancer l'analyse du dossier sélectionné",
             type="primary",
         )
     else:
-        run_analysis = analysis_action == "rerun"
+        lancer_analyse = action_analyse == "rerun"
 
-    if run_analysis:
+    if lancer_analyse:
         with st.spinner("Analyse en cours..."):
-            st.session_state["analysis_result"] = app.invoke(
-                build_initial_state(default_question)
+            st.session_state["resultat_analyse"] = application.invoke(
+                construire_etat_initial(question_defaut)
             )
-            add_history_entry(selected_client, st.session_state["analysis_result"])
+            ajouter_entree_historique(
+                client_selectionne, st.session_state["resultat_analyse"]
+            )
 
-    result = st.session_state.get("analysis_result")
+    resultat = st.session_state.get("resultat_analyse")
 
-    if result is None:
+    if resultat is None:
         return
 
-    left, right = st.columns([2, 1])
+    colonne_gauche, colonne_droite = st.columns([2, 1])
 
-    with right:
-        st.metric("Validation", status_label(result))
+    with colonne_droite:
+        st.metric("Validation", libelle_statut(resultat))
 
-        if result.get("risk_level"):
-            st.metric("Risque retenu", result["risk_level"].capitalize())
+        if resultat.get("niveau_risque"):
+            st.metric("Risque retenu", resultat["niveau_risque"].capitalize())
 
         st.divider()
         st.subheader("Validation de la décision finale")
@@ -180,35 +210,39 @@ def main() -> None:
             horizontal=True,
         )
 
-        comment = st.text_area("Commentaire", height=100)
+        commentaire = st.text_area("Commentaire", height=100)
 
         if st.button("Appliquer la décision", use_container_width=True):
-            updated_state = {
-                **result,
-                "human_decision": decision,
-                "human_comment": comment.strip(),
-                "allow_console_validation": False,
+            etat_mis_a_jour = {
+                **resultat,
+                "decision_humaine": decision,
+                "commentaire_humain": commentaire.strip(),
+                "autoriser_validation_console": False,
             }
 
-            st.session_state["analysis_result"] = human_validation_agent(updated_state)
-            update_latest_history_status(st.session_state["analysis_result"])
+            st.session_state["resultat_analyse"] = agent_validation_humaine(
+                etat_mis_a_jour
+            )
+            mettre_a_jour_dernier_statut_historique(
+                st.session_state["resultat_analyse"]
+            )
             st.rerun()
 
-    with left:
+    with colonne_gauche:
         st.subheader("Décision proposée")
-        st.markdown(result.get("final_answer", ""))
+        st.markdown(reponse_finale_pour_affichage(resultat))
 
         st.divider()
 
-        tab_financial, tab_conformite = st.tabs(
+        onglet_financier, onglet_conformite = st.tabs(
             ["Analyse financière", "Conformité et procédures"]
         )
 
-        with tab_financial:
-            st.markdown(result.get("financial_analysis", ""))
+        with onglet_financier:
+            st.markdown(resultat.get("analyse_financiere", ""))
 
-        with tab_conformite:
-            st.markdown(result.get("conformite_analysis", ""))
+        with onglet_conformite:
+            st.markdown(resultat.get("analyse_conformite", ""))
 
 
 if __name__ == "__main__":

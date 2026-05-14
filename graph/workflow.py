@@ -1,37 +1,37 @@
 from langgraph.graph import StateGraph, END
 
-from graph.state import AgentState
+from graph.state import EtatAgent
 
-from agents.supervisor import supervisor_agent
-from agents.financial_agent import financial_agent
-from agents.conformite_agent import conformite_agent
-from agents.evaluator_agent import evaluator_agent
-from agents.human_validation_agent import human_validation_agent
+from agents.supervisor import agent_superviseur
+from agents.financial_agent import agent_financier
+from agents.conformite_agent import agent_conformite
+from agents.evaluator_agent import agent_evaluateur
+from agents.human_validation_agent import agent_validation_humaine
 
 
 # Création du graphe
-workflow = StateGraph(AgentState)
+flux_travail = StateGraph(EtatAgent)
 
 
 # Ajout des nodes
-workflow.add_node("supervisor", supervisor_agent)
-workflow.add_node("financial", financial_agent)
-workflow.add_node("conformite", conformite_agent)
-workflow.add_node("evaluator", evaluator_agent)
-workflow.add_node("human_validation", human_validation_agent)
+flux_travail.add_node("superviseur", agent_superviseur)
+flux_travail.add_node("financier", agent_financier)
+flux_travail.add_node("conformite", agent_conformite)
+flux_travail.add_node("evaluateur", agent_evaluateur)
+flux_travail.add_node("validation_humaine", agent_validation_humaine)
 
 
 # Point d'entrée
-workflow.set_entry_point("supervisor")
+flux_travail.set_entry_point("superviseur")
 
 
 # Edges du workflow
-workflow.add_edge("supervisor", "financial")
-workflow.add_edge("financial", "conformite")
-workflow.add_edge("conformite", "evaluator")
-workflow.add_edge("evaluator", "human_validation")
-workflow.add_edge("human_validation", END)
+flux_travail.add_edge("superviseur", "financier")
+flux_travail.add_edge("financier", "conformite")
+flux_travail.add_edge("conformite", "evaluateur")
+flux_travail.add_edge("evaluateur", "validation_humaine")
+flux_travail.add_edge("validation_humaine", END)
 
 
 # Compilation du graph
-app = workflow.compile()
+application = flux_travail.compile()

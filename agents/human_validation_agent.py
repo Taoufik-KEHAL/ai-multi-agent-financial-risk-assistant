@@ -1,41 +1,65 @@
-from graph.state import AgentState
-from tools.human_validation_tool import ask_human_validation
+from graph.state import EtatAgent
+from tools.human_validation_tool import demander_validation_humaine
 
 
-def human_validation_agent(state: AgentState) -> AgentState:
+def nettoyer_decision_finale(reponse: str) -> str:
+    lignes = []
+
+    for ligne in reponse.splitlines():
+        ligne_normalisee = ligne.strip().lower()
+
+        if ligne_normalisee.startswith("décision finale :"):
+            continue
+        if ligne_normalisee.startswith("commentaire humain :"):
+            continue
+        if ligne_normalisee.startswith("commentaires :"):
+            continue
+
+        lignes.append(ligne)
+
+    return "\n".join(lignes).strip()
+
+
+def agent_validation_humaine(etat: EtatAgent) -> EtatAgent:
     """
     Agent de validation humaine :
     demande à l'utilisateur de valider ou refuser
     la décision finale proposée par le système.
     """
 
-    final_answer = state.get("decision_draft", state["final_answer"])
-    decision = state.get("human_decision")
-    comment = state.get("human_comment", "")
-    allow_console = state.get("allow_console_validation", True)
+    reponse_finale = nettoyer_decision_finale(
+        etat.get("brouillon_decision", etat["reponse_finale"])
+    )
+    decision = etat.get("decision_humaine")
+    commentaire = etat.get("commentaire_humain", "")
+    autoriser_console = etat.get("autoriser_validation_console", True)
 
-    validation_result = ask_human_validation(
-        final_answer=final_answer,
+    resultat_validation = demander_validation_humaine(
+        reponse_finale=reponse_finale,
         decision=decision,
-        comment=comment,
-        allow_console=allow_console,
+        commentaire=commentaire,
+        autoriser_console=autoriser_console,
     )
 
-    state["decision_draft"] = final_answer
-    state["is_validated"] = validation_result["validated"]
-    state["human_validation"] = validation_result["message"]
-    status = validation_result["status"]
+    etat["brouillon_decision"] = reponse_finale
+    etat["est_valide"] = resultat_validation["valide"]
+    etat["validation_humaine"] = resultat_validation["message"]
+    statut = resultat_validation["statut"]
 
-    if status == "validated":
-        state["final_answer"] += "\n\nDécision finale : VALIDÉE par l'utilisateur."
-    elif status == "refused":
-        state["final_answer"] += "\n\nDécision finale : REFUSÉE par l'utilisateur."
+    if statut == "valide":
+        resume_decision = "Décision finale : le dossier a été validé."
+    elif statut == "refuse":
+        resume_decision = "Décision finale : le dossier a été refusé."
     else:
-        state["final_answer"] += "\n\nDécision finale : EN ATTENTE de validation humaine."
+        resume_decision = "Décision finale : EN ATTENTE de validation humaine."
 
-    if validation_result["comment"]:
-        state["final_answer"] += f"\nCommentaire humain : {validation_result['comment']}"
+    etat["reponse_finale"] = f"{reponse_finale}\n\n{resume_decision}"
+
+    if resultat_validation["commentaire"]:
+        etat["reponse_finale"] += (
+            f"\nCommentaires : {resultat_validation['commentaire']}"
+        )
 
     print("[HUMAN VALIDATION] Validation humaine effectuée")
 
-    return state
+    return etat

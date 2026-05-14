@@ -1,18 +1,18 @@
-from tools.rag_vectorstore import search_pdf_context
+from tools.rag_vectorstore import rechercher_contexte_pdf
 
 
-CONFORMITE_PDF_PATH = "data/conformite/regles_conformite.pdf"
-CONFORMITE_VECTORSTORE_PATH = "vectorstores/conformite/store.json"
+CHEMIN_PDF_CONFORMITE = "data/conformite/regles_conformite.pdf"
+CHEMIN_VECTORSTORE_CONFORMITE = "vectorstores/conformite/store.json"
 
 
-def search_conformite(query: str) -> str:
+def rechercher_conformite(requete: str) -> str:
     """
     Recherche sémantique dans les règles de conformité.
     """
 
-    return search_pdf_context(
-        pdf_path=CONFORMITE_PDF_PATH,
-        store_path=CONFORMITE_VECTORSTORE_PATH,
-        query=query,
-        k=2,
+    return rechercher_contexte_pdf(
+        chemin_pdf=CHEMIN_PDF_CONFORMITE,
+        chemin_store=CHEMIN_VECTORSTORE_CONFORMITE,
+        requete=requete,
+        nombre_resultats=2,
     )

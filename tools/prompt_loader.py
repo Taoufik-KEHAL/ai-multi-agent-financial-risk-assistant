@@ -1,13 +1,13 @@
 from pathlib import Path
 
 
-PROMPTS_DIR = Path("prompts")
+DOSSIER_PROMPTS = Path("prompts")
 
 
-def load_prompt(name: str) -> str:
-    prompt_path = PROMPTS_DIR / name
+def charger_prompt(nom: str) -> str:
+    chemin_prompt = DOSSIER_PROMPTS / nom
 
-    if not prompt_path.exists():
-        raise FileNotFoundError(f"Prompt introuvable : {prompt_path}")
+    if not chemin_prompt.exists():
+        raise FileNotFoundError(f"Prompt introuvable : {chemin_prompt}")
 
-    return prompt_path.read_text(encoding="utf-8").strip()
+    return chemin_prompt.read_text(encoding="utf-8").strip()

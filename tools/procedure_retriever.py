@@ -1,18 +1,18 @@
-from tools.rag_vectorstore import search_pdf_context
+from tools.rag_vectorstore import rechercher_contexte_pdf
 
 
-PROCEDURES_PDF_PATH = "data/procedures/procedures_recouvrement.pdf"
-PROCEDURES_VECTORSTORE_PATH = "vectorstores/procedures/store.json"
+CHEMIN_PDF_PROCEDURES = "data/procedures/procedures_recouvrement.pdf"
+CHEMIN_VECTORSTORE_PROCEDURES = "vectorstores/procedures/store.json"
 
 
-def search_procedures(query: str) -> str:
+def rechercher_procedures(requete: str) -> str:
     """
     Recherche sémantique dans les procédures recouvrement.
     """
 
-    return search_pdf_context(
-        pdf_path=PROCEDURES_PDF_PATH,
-        store_path=PROCEDURES_VECTORSTORE_PATH,
-        query=query,
-        k=2,
+    return rechercher_contexte_pdf(
+        chemin_pdf=CHEMIN_PDF_PROCEDURES,
+        chemin_store=CHEMIN_VECTORSTORE_PROCEDURES,
+        requete=requete,
+        nombre_resultats=2,
     )

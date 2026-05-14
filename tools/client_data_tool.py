@@ -1,25 +1,25 @@
 import pandas as pd
 
 
-def get_client_data(client_id: str) -> dict:
+def recuperer_donnees_client(identifiant_client: str) -> dict:
     """
     Récupère les informations financières d’un client
     depuis le fichier CSV.
     """
 
-    csv_path = "data/clients/clients_historique.csv"
+    chemin_csv = "data/clients/clients_historique.csv"
 
-    df = pd.read_csv(csv_path)
+    donnees_clients = pd.read_csv(chemin_csv)
 
-    client = df[df["client_id"] == client_id]
+    client = donnees_clients[donnees_clients["client_id"] == identifiant_client]
 
     if client.empty:
         return {
-            "found": False,
-            "message": f"Aucun client trouvé avec l'identifiant {client_id}"
+            "trouve": False,
+            "message": f"Aucun client trouvé avec l'identifiant {identifiant_client}"
         }
 
     return {
-        "found": True,
-        "client_data": client.iloc[0].to_dict()
+        "trouve": True,
+        "donnees_client": client.iloc[0].to_dict()
     }

@@ -1,17 +1,17 @@
 from typing import List, NotRequired, TypedDict
 
 
-class AgentState(TypedDict):
+class EtatAgent(TypedDict):
     question: str
     route: str
-    financial_analysis: str
-    conformite_analysis: str
-    risk_level: str
-    final_answer: str
-    decision_draft: NotRequired[str]
+    analyse_financiere: str
+    analyse_conformite: str
+    niveau_risque: str
+    reponse_finale: str
+    brouillon_decision: NotRequired[str]
     documents: List[str]
-    human_validation: str
-    is_validated: bool
-    human_decision: NotRequired[str]
-    human_comment: NotRequired[str]
-    allow_console_validation: NotRequired[bool]
+    validation_humaine: str
+    est_valide: bool
+    decision_humaine: NotRequired[str]
+    commentaire_humain: NotRequired[str]
+    autoriser_validation_console: NotRequired[bool]

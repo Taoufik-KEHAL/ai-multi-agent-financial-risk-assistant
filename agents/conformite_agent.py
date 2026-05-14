@@ -1,48 +1,48 @@
-from graph.state import AgentState
+from graph.state import EtatAgent
 
-from tools.conformite_retriever import search_conformite
-from tools.procedure_retriever import search_procedures
-from tools.prompt_loader import load_prompt
+from tools.conformite_retriever import rechercher_conformite
+from tools.procedure_retriever import rechercher_procedures
+from tools.prompt_loader import charger_prompt
 
-from config.llm import get_llm
+from config.llm import obtenir_llm
 
 
 # Initialisation du modèle
-model = get_llm()
-CONFORMITE_PROMPT = load_prompt("conformite.txt")
+modele = obtenir_llm()
+PROMPT_CONFORMITE = charger_prompt("conformite.txt")
 
 
-def conformite_agent(state: AgentState) -> AgentState:
+def agent_conformite(etat: EtatAgent) -> EtatAgent:
     """
     Agent conformité :
     utilise le RAG documentaire
     pour analyser le dossier client.
     """
 
-    question = state["question"]
-    financial_analysis = state["financial_analysis"]
+    question = etat["question"]
+    analyse_financiere = etat["analyse_financiere"]
 
     # Recherche documentaire
-    rag_query = f"{question}\n\n{financial_analysis}"
+    requete_rag = f"{question}\n\n{analyse_financiere}"
 
-    conformite_context = search_conformite(rag_query)
+    contexte_conformite = rechercher_conformite(requete_rag)
 
-    procedure_context = search_procedures(rag_query)
+    contexte_procedure = rechercher_procedures(requete_rag)
 
-    prompt = CONFORMITE_PROMPT.format(
+    prompt = PROMPT_CONFORMITE.format(
         question=question,
-        financial_analysis=financial_analysis,
-        conformite_context=conformite_context,
-        procedure_context=procedure_context,
+        analyse_financiere=analyse_financiere,
+        contexte_conformite=contexte_conformite,
+        contexte_procedure=contexte_procedure,
     )
 
     # Appel LLM
-    response = model.invoke(prompt)
+    reponse = modele.invoke(prompt)
 
-    analysis = response.content
+    analyse = reponse.content
 
     print("[CONFORMITE AGENT] Analyse conformité générée")
 
-    state["conformite_analysis"] = analysis
+    etat["analyse_conformite"] = analyse
 
-    return state
+    return etat

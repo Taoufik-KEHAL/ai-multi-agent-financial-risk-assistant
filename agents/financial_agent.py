@@ -1,41 +1,43 @@
 import re
 
-from graph.state import AgentState
-from config.llm import get_llm
-from tools.client_data_tool import get_client_data
-from tools.prompt_loader import load_prompt
+from graph.state import EtatAgent
+from config.llm import obtenir_llm
+from tools.client_data_tool import recuperer_donnees_client
+from tools.prompt_loader import charger_prompt
 
 
-model = get_llm()
-FINANCIAL_PROMPT = load_prompt("financial.txt")
+modele = obtenir_llm()
+PROMPT_FINANCIER = charger_prompt("financial.txt")
 
 
-def financial_agent(state: AgentState) -> AgentState:
+def agent_financier(etat: EtatAgent) -> EtatAgent:
     """
     Agent financier :
     analyse les données financières du client
     depuis le fichier CSV.
     """
 
-    question = state["question"]
+    question = etat["question"]
 
-    client_match = re.search(r"\bC\d{3}\b", question.upper())
-    client_id = client_match.group(0) if client_match else None
+    correspondance_client = re.search(r"\bC\d{3}\b", question.upper())
+    identifiant_client = (
+        correspondance_client.group(0) if correspondance_client else None
+    )
 
-    if not client_id:
-        state["financial_analysis"] = "Identifiant client introuvable."
-        return state
+    if not identifiant_client:
+        etat["analyse_financiere"] = "Identifiant client introuvable."
+        return etat
 
     # Appel du tool CSV
-    result = get_client_data(client_id)
+    resultat = recuperer_donnees_client(identifiant_client)
 
-    if not result["found"]:
-        state["financial_analysis"] = result["message"]
-        return state
+    if not resultat["trouve"]:
+        etat["analyse_financiere"] = resultat["message"]
+        return etat
 
-    client = result["client_data"]
+    client = resultat["donnees_client"]
 
-    prompt = FINANCIAL_PROMPT.format(
+    prompt = PROMPT_FINANCIER.format(
         question=question,
         client_id=client["client_id"],
         prenom=client["prenom"],
@@ -54,11 +56,11 @@ def financial_agent(state: AgentState) -> AgentState:
         niveau_risque=client["niveau_risque"],
     )
 
-    response = model.invoke(prompt)
-    analysis = response.content
+    reponse = modele.invoke(prompt)
+    analyse = reponse.content
 
-    print(f"[FINANCIAL AGENT] Analyse du client {client_id} effectuée")
+    print(f"[FINANCIAL AGENT] Analyse du client {identifiant_client} effectuée")
 
-    state["financial_analysis"] = analysis
+    etat["analyse_financiere"] = analyse
 
-    return state
+    return etat

@@ -1,53 +1,53 @@
-VALIDATION_ACCEPTED = {"oui", "o", "yes", "y", "valider", "validé", "valide"}
-VALIDATION_REFUSED = {"non", "n", "no", "refuser", "refusé", "refuse"}
+VALIDATION_ACCEPTEE = {"oui", "o", "yes", "y", "valider", "validé", "valide"}
+VALIDATION_REFUSEE = {"non", "n", "no", "refuser", "refusé", "refuse"}
 
 
-def ask_human_validation(
-    final_answer: str,
+def demander_validation_humaine(
+    reponse_finale: str,
     decision: str | None = None,
-    comment: str = "",
-    allow_console: bool = True,
+    commentaire: str = "",
+    autoriser_console: bool = True,
 ) -> dict:
     """
     Demande ou applique une validation humaine avant décision finale.
     """
 
-    if decision is None and allow_console:
+    if decision is None and autoriser_console:
         print("\n================ VALIDATION HUMAINE ================\n")
-        print(final_answer)
+        print(reponse_finale)
         print("\n====================================================\n")
 
         decision = input("Valider cette décision ? (oui/non) : ")
 
     if decision is None:
         return {
-            "status": "pending",
-            "validated": False,
+            "statut": "en_attente",
+            "valide": False,
             "message": "Décision en attente de validation humaine.",
-            "comment": comment,
+            "commentaire": commentaire,
         }
 
-    normalized_decision = decision.strip().lower()
+    decision_normalisee = decision.strip().lower()
 
-    if normalized_decision in VALIDATION_ACCEPTED:
+    if decision_normalisee in VALIDATION_ACCEPTEE:
         return {
-            "status": "validated",
-            "validated": True,
+            "statut": "valide",
+            "valide": True,
             "message": "Décision validée par l'utilisateur.",
-            "comment": comment,
+            "commentaire": commentaire,
         }
 
-    if normalized_decision in VALIDATION_REFUSED:
+    if decision_normalisee in VALIDATION_REFUSEE:
         return {
-            "status": "refused",
-            "validated": False,
+            "statut": "refuse",
+            "valide": False,
             "message": "Décision refusée par l'utilisateur.",
-            "comment": comment,
+            "commentaire": commentaire,
         }
 
     return {
-        "status": "pending",
-        "validated": False,
+        "statut": "en_attente",
+        "valide": False,
         "message": f"Décision humaine non reconnue : {decision}",
-        "comment": comment,
+        "commentaire": commentaire,
     }

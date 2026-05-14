@@ -1,45 +1,45 @@
-from graph.state import AgentState
+from graph.state import EtatAgent
 
-from config.llm import get_llm
-from tools.prompt_loader import load_prompt
+from config.llm import obtenir_llm
+from tools.prompt_loader import charger_prompt
 
 
 # Initialisation du modèle
-model = get_llm()
-EVALUATOR_PROMPT = load_prompt("evaluator.txt")
+modele = obtenir_llm()
+PROMPT_EVALUATEUR = charger_prompt("evaluator.txt")
 
 
-def evaluator_agent(state: AgentState) -> AgentState:
+def agent_evaluateur(etat: EtatAgent) -> EtatAgent:
     """
     Agent évaluateur :
     combine les analyses financières et conformité
     puis génère une décision finale.
     """
 
-    financial_analysis = state["financial_analysis"]
+    analyse_financiere = etat["analyse_financiere"]
 
-    conformite_analysis = state["conformite_analysis"]
+    analyse_conformite = etat["analyse_conformite"]
 
-    prompt = EVALUATOR_PROMPT.format(
-        financial_analysis=financial_analysis,
-        conformite_analysis=conformite_analysis,
+    prompt = PROMPT_EVALUATEUR.format(
+        analyse_financiere=analyse_financiere,
+        analyse_conformite=analyse_conformite,
     )
 
-    response = model.invoke(prompt)
+    reponse = modele.invoke(prompt)
 
-    final_answer = response.content
-    final_answer_lower = final_answer.lower()
+    reponse_finale = reponse.content
+    reponse_finale_minuscule = reponse_finale.lower()
 
-    if "niveau de risque retenu : élevé" in final_answer_lower:
-        state["risk_level"] = "élevé"
-    elif "niveau de risque retenu : moyen" in final_answer_lower:
-        state["risk_level"] = "moyen"
-    elif "niveau de risque retenu : faible" in final_answer_lower:
-        state["risk_level"] = "faible"
+    if "niveau de risque retenu : élevé" in reponse_finale_minuscule:
+        etat["niveau_risque"] = "élevé"
+    elif "niveau de risque retenu : moyen" in reponse_finale_minuscule:
+        etat["niveau_risque"] = "moyen"
+    elif "niveau de risque retenu : faible" in reponse_finale_minuscule:
+        etat["niveau_risque"] = "faible"
 
     print("[EVALUATOR AGENT] Décision finale générée")
 
-    state["decision_draft"] = final_answer
-    state["final_answer"] = final_answer
+    etat["brouillon_decision"] = reponse_finale
+    etat["reponse_finale"] = reponse_finale
 
-    return state
+    return etat

@@ -1,8 +1,8 @@
-from graph.state import AgentState
+from graph.state import EtatAgent
 
 
-def supervisor_agent(state: AgentState) -> AgentState:
-    question = state["question"].lower()
+def agent_superviseur(etat: EtatAgent) -> EtatAgent:
+    question = etat["question"].lower()
 
     if "finance" in question or "financier" in question or "financière" in question:
         route = "finance"
@@ -15,5 +15,5 @@ def supervisor_agent(state: AgentState) -> AgentState:
 
     print(f"[SUPERVISOR] Route choisie : {route}")
 
-    state["route"] = route
-    return state
+    etat["route"] = route
+    return etat

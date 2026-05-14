@@ -7,61 +7,68 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-CHUNK_SIZE = 300
-CHUNK_OVERLAP = 50
+MODELE_EMBEDDING = "sentence-transformers/all-MiniLM-L6-v2"
+TAILLE_FRAGMENT = 300
+CHEVAUCHEMENT_FRAGMENT = 50
 
 
 @lru_cache(maxsize=1)
-def get_embeddings() -> HuggingFaceEmbeddings:
+def obtenir_embeddings() -> HuggingFaceEmbeddings:
     try:
         return HuggingFaceEmbeddings(
-            model_name=EMBEDDING_MODEL,
+            model_name=MODELE_EMBEDDING,
             model_kwargs={"local_files_only": True},
         )
     except Exception:
-        return HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+        return HuggingFaceEmbeddings(model_name=MODELE_EMBEDDING)
 
 
-def load_or_create_vectorstore(pdf_path: str, store_path: str) -> InMemoryVectorStore:
+def charger_ou_creer_vectorstore(
+    chemin_pdf: str, chemin_store: str
+) -> InMemoryVectorStore:
     """
     Charge un vector store persistant s'il est à jour, sinon le reconstruit
     depuis le PDF source.
     """
 
-    pdf = Path(pdf_path)
-    store = Path(store_path)
+    pdf = Path(chemin_pdf)
+    chemin_vectorstore = Path(chemin_store)
 
     if not pdf.exists():
         raise FileNotFoundError(f"PDF introuvable : {pdf}")
 
-    embeddings = get_embeddings()
+    embeddings = obtenir_embeddings()
 
-    if _is_store_current(store, pdf):
-        return InMemoryVectorStore.load(str(store), embedding=embeddings)
+    if _store_est_a_jour(chemin_vectorstore, pdf):
+        return InMemoryVectorStore.load(str(chemin_vectorstore), embedding=embeddings)
 
     documents = PyPDFLoader(str(pdf)).load()
 
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP,
+    decoupeur_texte = RecursiveCharacterTextSplitter(
+        chunk_size=TAILLE_FRAGMENT,
+        chunk_overlap=CHEVAUCHEMENT_FRAGMENT,
         add_start_index=True,
     )
 
-    splits = text_splitter.split_documents(documents)
-    vector_store = InMemoryVectorStore(embeddings)
-    vector_store.add_documents(documents=splits)
-    vector_store.dump(str(store))
+    fragments = decoupeur_texte.split_documents(documents)
+    vectorstore = InMemoryVectorStore(embeddings)
+    vectorstore.add_documents(documents=fragments)
+    vectorstore.dump(str(chemin_vectorstore))
 
-    return vector_store
-
-
-def search_pdf_context(pdf_path: str, store_path: str, query: str, k: int = 2) -> str:
-    vector_store = load_or_create_vectorstore(pdf_path, store_path)
-    results = vector_store.similarity_search(query, k=k)
-
-    return "\n\n".join(doc.page_content for doc in results)
+    return vectorstore
 
 
-def _is_store_current(store: Path, pdf: Path) -> bool:
-    return store.exists() and store.stat().st_mtime >= pdf.stat().st_mtime
+def rechercher_contexte_pdf(
+    chemin_pdf: str, chemin_store: str, requete: str, nombre_resultats: int = 2
+) -> str:
+    vectorstore = charger_ou_creer_vectorstore(chemin_pdf, chemin_store)
+    resultats = vectorstore.similarity_search(requete, k=nombre_resultats)
+
+    return "\n\n".join(document.page_content for document in resultats)
+
+
+def _store_est_a_jour(chemin_store: Path, chemin_pdf: Path) -> bool:
+    return (
+        chemin_store.exists()
+        and chemin_store.stat().st_mtime >= chemin_pdf.stat().st_mtime
+    )
