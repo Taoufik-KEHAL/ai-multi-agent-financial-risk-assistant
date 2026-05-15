@@ -1,3 +1,13 @@
+import warnings
+
+from langchain_core._api.deprecation import LangChainPendingDeprecationWarning
+
+warnings.filterwarnings(
+    "ignore",
+    message=".*allowed_objects.*",
+    category=LangChainPendingDeprecationWarning,
+)
+
 from langgraph.graph import StateGraph, END
 
 from graph.state import EtatAgent
